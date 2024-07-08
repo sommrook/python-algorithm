@@ -14,19 +14,24 @@ dx = [1, 0, -1, 0]
 dy = [0, -1, 0, 1]
 
 
-def bfs():
-    global max_count
+def global_count(func):
+    def wrapper():
+        return func(count=1)
+    return wrapper
 
+
+@global_count
+def bfs(count):
     while queue:
         a, b, alpha_list = queue.popleft()
         for x, y in zip(dx, dy):
             if 0 <= a+x < R and 0 <= b+y < C:
                 if graph[a+x][b+y] not in alpha_list:
                     queue.append((a+x, b+y, alpha_list + [graph[a+x][b+y]]))
-                    max_count = max(max_count, len(alpha_list) + 1)
+                    count = max(count, len(alpha_list) + 1)
+    return count
 
 
 max_count = 1
 queue.append((0, 0, [graph[0][0]]))
-bfs()
-print(max_count)
+print(bfs())
